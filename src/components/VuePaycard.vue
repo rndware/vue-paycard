@@ -29,7 +29,7 @@
           <div class="card-item__type">
             <transition name="slide-fade-up">
               <img
-                v-if="cardType"
+                v-if="cardType && getCreditCardImage"
                 :src="getCreditCardImage"
                 :key="cardType"
                 :alt="`${cardType} brand image`"
@@ -161,7 +161,7 @@
         </label>
         <div class="card-item__type">
           <img
-            v-if="cardType"
+            v-if="cardType && getCreditCardImage"
             :src="getCreditCardImage"
             class="card-item__typeImg"
             alt="Dark bar image"
@@ -227,12 +227,15 @@ export default {
       currentFocus: null,
       isFocused: false,
       isCardFlipped: false,
+      isClient: false,
       amexCardPlaceholder: '#### ###### #####',
       fifteenCardPlaceholder: '#### #### #### ###',
       dinersCardPlaceholder: '#### ###### ####',
       unionPayCardPlaceholder: '###### ####### ######',
       defaultCardPlaceholder: defaultPlaceholder,
-      currentPlaceholder: defaultPlaceholder
+      currentPlaceholder: defaultPlaceholder,
+      cardImageCache: {},
+      backgroundImageCache: {}
     }
   },
   watch: {
@@ -249,6 +252,7 @@ export default {
     }
   },
   mounted () {
+    this.isClient = true
     this.init()
   },
   beforeDestroy () {
@@ -269,8 +273,22 @@ export default {
         : this.defaultPlaceholder
     },
     getCreditCardImage () {
-      const path = require(`../assets/images/${this.cardType}.png`)
-      return path.default || path
+      if (!this.cardType) return null
+
+      if (this.cardImageCache[this.cardType]) {
+        return this.cardImageCache[this.cardType]
+      }
+
+      if (this.isClient) {
+        this.loadCardImageClient(this.cardType)
+      } else {
+        try {
+          return this.loadCardImageServer(this.cardType)
+        } catch (error) {
+          console.warn(`Card type image not found: ${this.cardType}`)
+        }
+      }
+      return null
     },
     cardType () {
       const acceptedTypes = [
@@ -347,8 +365,22 @@ export default {
       const numberImage = parseInt(this.backgroundImage)
 
       if (this.isBackgroundImageFromAssets) {
-        const path = require(`../assets/images/${numberImage}.jpg`)
-        return path.default || path
+        const cacheKey = `asset-${numberImage}`
+        if (this.backgroundImageCache[cacheKey]) {
+          return this.backgroundImageCache[cacheKey]
+        }
+
+        if (this.isClient) {
+          this.loadBackgroundImageClient(numberImage, 'asset')
+          return null
+        } else {
+          try {
+            return this.loadBackgroundImageServer(numberImage, 'asset')
+          } catch (error) {
+            console.warn(`Background image not found: ${numberImage}`)
+            return null
+          }
+        }
       }
 
       if (this.backgroundImage && !Number.isFinite(numberImage)) {
@@ -357,9 +389,23 @@ export default {
 
       if (this.hasRandomBackgrounds) {
         const random = Math.floor(Math.random() * 25 + 1)
+        const cacheKey = `random-${random}`
 
-        const path = require(`../assets/images/${random}.jpg`)
-        return path.default || path
+        if (this.backgroundImageCache[cacheKey]) {
+          return this.backgroundImageCache[cacheKey]
+        }
+
+        if (this.isClient) {
+          this.loadBackgroundImageClient(random, 'random')
+          return null
+        } else {
+          try {
+            return this.loadBackgroundImageServer(random, 'random')
+          } catch (error) {
+            console.warn(`Random background image not found: ${random}`)
+            return null
+          }
+        }
       }
 
       return null
@@ -434,6 +480,42 @@ export default {
       this.$nextTick(() => {
         this.changeFocus()
       })
+    },
+    loadCardImageServer (cardType) {
+      const path = require(`~/assets/images/${cardType}.png`)
+      const imageUrl = path.default || path
+      this.cardImageCache[cardType] = imageUrl
+      return imageUrl
+    },
+    loadBackgroundImageServer (imageNumber, type) {
+      const cacheKey = `${type}-${imageNumber}`
+      const path = require(`~/assets/images/${imageNumber}.jpg`)
+      const imageUrl = path.default || path
+      this.backgroundImageCache[cacheKey] = imageUrl
+      return imageUrl
+    },
+    async loadCardImageClient (cardType) {
+      try {
+        const module = await import(`../assets/images/${cardType}.png`)
+        const imageUrl = module.default || module
+        this.cardImageCache[cardType] = imageUrl
+        this.$forceUpdate()
+      } catch (error) {
+        console.warn(`Failed to load card type image: ${cardType}`, error)
+        this.cardImageCache[cardType] = null
+      }
+    },
+    async loadBackgroundImageClient (imageNumber, type) {
+      const cacheKey = `${type}-${imageNumber}`
+      try {
+        const module = await import(`../assets/images/${imageNumber}.jpg`)
+        const imageUrl = module.default || module
+        this.backgroundImageCache[cacheKey] = imageUrl
+        this.$forceUpdate()
+      } catch (error) {
+        console.warn(`Failed to load background image: ${imageNumber}`, error)
+        this.backgroundImageCache[cacheKey] = null
+      }
     }
   }
 }
