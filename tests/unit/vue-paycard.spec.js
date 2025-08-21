@@ -400,92 +400,73 @@ describe('When I create the VuePaycard component', () => {
     let valueFields = { cardName: '', cardNumber: '4111 1111 1111 1111', cardMonth: '', cardYear: '', cardCvv: '' }
     const wrapper = createPaycard({ valueFields })
     await wrapper.setData({ cardImageCache: { visa: 'mocked/visa.png' } })
-    expect(wrapper.exists()).toBeTruthy()
-    await wrapper.vm.$nextTick()
-
     const img = wrapper.find('.card-item__typeImg')
+    expect(wrapper.exists()).toBeTruthy()
     expect(img.attributes().alt).toContain('visa')
-
     valueFields = { cardName: '', cardNumber: '3437 516165 16516', cardMonth: '', cardYear: '', cardCvv: '' }
     await wrapper.setProps({ valueFields })
     await wrapper.setData({ cardImageCache: { amex: 'mocked/amex.png' } })
     expect(wrapper.find('.card-item__typeImg').attributes().alt).toContain('amex')
-
     valueFields = { cardName: '', cardNumber: '5151 1111 1111 1111', cardMonth: '', cardYear: '', cardCvv: '' }
     await wrapper.setProps({ valueFields })
     await wrapper.setData({ cardImageCache: { mastercard: 'mocked/mastercard.png' } })
     expect(wrapper.find('.card-item__typeImg').attributes().alt).toContain('mastercard')
-
     valueFields = { cardName: '', cardNumber: '6011 1111 1111 1111', cardMonth: '', cardYear: '', cardCvv: '' }
     await wrapper.setProps({ valueFields })
     await wrapper.setData({ cardImageCache: { discover: 'mocked/discover.png' } })
     expect(wrapper.find('.card-item__typeImg').attributes().alt).toContain('discover')
-
     valueFields = { cardName: '', cardNumber: '62600094752489245', cardMonth: '', cardYear: '', cardCvv: '' }
     await wrapper.setProps({ valueFields })
     await wrapper.setData({ cardImageCache: { unionpay: 'mocked/unionpay.png' } })
     expect(wrapper.find('.card-item__typeImg').attributes().alt).toContain('unionpay')
-
     valueFields = { cardName: '', cardNumber: '9792 1111 1111 1111', cardMonth: '', cardYear: '', cardCvv: '' }
     await wrapper.setProps({ valueFields })
     await wrapper.setData({ cardImageCache: { troy: 'mocked/troy.png' } })
     expect(wrapper.find('.card-item__typeImg').attributes().alt).toContain('troy')
-
     valueFields = { cardName: '', cardNumber: '3051 111111 1111', cardMonth: '', cardYear: '', cardCvv: '' }
     await wrapper.setProps({ valueFields })
     await wrapper.setData({ cardImageCache: { dinersclub: 'mocked/dinersclub.png' } })
     expect(wrapper.find('.card-item__typeImg').attributes().alt).toContain('dinersclub')
-
     valueFields = { cardName: '', cardNumber: '3528 9151 6515 6156', cardMonth: '', cardYear: '', cardCvv: '' }
     await wrapper.setProps({ valueFields })
     await wrapper.setData({ cardImageCache: { jcb: 'mocked/jcb.png' } })
     expect(wrapper.find('.card-item__typeImg').attributes().alt).toContain('jcb')
-
     valueFields = { cardName: '', cardNumber: '6362 9700 0045 7013', cardMonth: '', cardYear: '', cardCvv: '' }
     await wrapper.setProps({ valueFields })
     await wrapper.setData({ cardImageCache: { elo: 'mocked/elo.png' } })
     expect(wrapper.find('.card-item__typeImg').attributes().alt).toContain('elo')
-
     valueFields = { cardName: '', cardNumber: '6759 6498 2643 8453', cardMonth: '', cardYear: '', cardCvv: '' }
     await wrapper.setProps({ valueFields })
     await wrapper.setData({ cardImageCache: { maestro: 'mocked/maestro.png' } })
     expect(wrapper.find('.card-item__typeImg').attributes().alt).toContain('maestro')
-
     valueFields = { cardName: '', cardNumber: '1533 4210 3478 161', cardMonth: '', cardYear: '', cardCvv: '' }
     await wrapper.setProps({ valueFields })
     await wrapper.setData({ cardImageCache: { uatp: 'mocked/uatp.png' } })
     expect(wrapper.find('.card-item__typeImg').attributes().alt).toContain('uatp')
-
     valueFields = { cardName: '', cardNumber: '6706 0000 0000 0000', cardMonth: '', cardYear: '', cardCvv: '' }
     await wrapper.setProps({ valueFields })
     await wrapper.setData({ cardImageCache: { laser: 'mocked/laser.png' } })
     expect(wrapper.find('.card-item__typeImg').attributes().alt).toContain('laser')
-
     valueFields = { cardName: '', cardNumber: '6062 8256 6638 5648', cardMonth: '', cardYear: '', cardCvv: '' }
     await wrapper.setProps({ valueFields })
     await wrapper.setData({ cardImageCache: { hipercard: 'mocked/hipercard.png' } })
     expect(wrapper.find('.card-item__typeImg').attributes().alt).toContain('hipercard')
-
     valueFields = { cardName: '', cardNumber: '5031 6889 1321 1342', cardMonth: '', cardYear: '', cardCvv: '' }
     await wrapper.setProps({ valueFields })
     await wrapper.setData({ cardImageCache: { aura: 'mocked/aura.png' } })
     expect(wrapper.find('.card-item__typeImg').attributes().alt).toContain('aura')
-
     valueFields = { cardName: '', cardNumber: '5019 6066 8505 1379', cardMonth: '', cardYear: '', cardCvv: '' }
     await wrapper.setProps({ valueFields })
     await wrapper.setData({ cardImageCache: { dankort: 'mocked/dankort.png' } })
     expect(wrapper.find('.card-item__typeImg').attributes().alt).toContain('dankort')
-
     valueFields = { cardName: '', cardNumber: '2204 1569 8128 9629', cardMonth: '', cardYear: '', cardCvv: '' }
     await wrapper.setProps({ valueFields })
     await wrapper.setData({ cardImageCache: { mir: 'mocked/mir.png' } })
     expect(wrapper.find('.card-item__typeImg').attributes().alt).toContain('mir')
-
     valueFields = { cardName: '', cardNumber: '4913 8185 2881 4543', cardMonth: '', cardYear: '', cardCvv: '' }
     await wrapper.setProps({ valueFields })
     await wrapper.setData({ cardImageCache: { visaelectron: 'mocked/visaelectron.png' } })
     expect(wrapper.find('.card-item__typeImg').attributes().alt).toContain('visaelectron')
-
     valueFields = { cardName: '', cardNumber: '', cardMonth: '', cardYear: '', cardCvv: '' }
     await wrapper.setProps({ valueFields })
     expect(wrapper.find('.card-item__typeImg').exists()).toBeFalsy()
