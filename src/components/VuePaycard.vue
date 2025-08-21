@@ -227,7 +227,6 @@ export default {
       currentFocus: null,
       isFocused: false,
       isCardFlipped: false,
-      isClient: false,
       amexCardPlaceholder: '#### ###### #####',
       fifteenCardPlaceholder: '#### #### #### ###',
       dinersCardPlaceholder: '#### ###### ####',
@@ -252,7 +251,6 @@ export default {
     }
   },
   mounted () {
-    this.isClient = true
     this.init()
   },
   beforeDestroy () {
@@ -278,8 +276,7 @@ export default {
       if (this.cardImageCache[this.cardType]) {
         return this.cardImageCache[this.cardType]
       }
-
-      if (this.isClient) {
+      if (this.isClient()) {
         this.loadCardImageClient(this.cardType)
       } else {
         try {
@@ -370,7 +367,7 @@ export default {
           return this.backgroundImageCache[cacheKey]
         }
 
-        if (this.isClient) {
+        if (this.isClient()) {
           this.loadBackgroundImageClient(numberImage, 'asset')
           return null
         } else {
@@ -395,7 +392,7 @@ export default {
           return this.backgroundImageCache[cacheKey]
         }
 
-        if (this.isClient) {
+        if (this.isClient()) {
           this.loadBackgroundImageClient(random, 'random')
           return null
         } else {
@@ -480,6 +477,9 @@ export default {
       this.$nextTick(() => {
         this.changeFocus()
       })
+    },
+    isClient () {
+      return typeof window !== 'undefined'
     },
     loadCardImageServer (cardType) {
       const path = require(`~/assets/images/${cardType}.png`)
