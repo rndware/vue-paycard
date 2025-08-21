@@ -17,7 +17,7 @@ describe('When I create the VuePaycard component', () => {
       stubs: {
         transition: transitionStub()
       },
-      methods: {
+      computed: {
         isClient: () => false
       }
     })
@@ -566,7 +566,6 @@ describe('When I create the VuePaycard component', () => {
       valueFields,
       setType: 'visa'
     })
-    await wrapper.setData({ isClient: true })
     await wrapper.setData({ cardImageCache: { visa: 'mocked/visa.png' } })
     expect(wrapper.exists()).toBeTruthy()
     const img = wrapper.find('.card-item__typeImg')
